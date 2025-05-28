@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * <p>The server supports the following operations:</p>
  * <ul>
  *   <li>Retrieving Table of Contents (TOC) for publications</li>
+ *   <li>Fetching topic content by publication ID and topic ID</li>
  *   <li>Fetching topic content by publication ID and URL</li>
  *   <li>Searching topics by text terms</li>
  *   <li>Getting topic recommendations based on existing topics</li>
