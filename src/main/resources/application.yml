@@ -1,0 +1,43 @@
+server:
+  port: ${DXD_MCP_PORT:8085}
+
+spring:
+  main:
+    banner-mode: off
+  ai:
+    mcp:
+      server:
+        name: @project.artifactId@
+        version: @project.version@
+        type: ASYNC
+        instructions: "This server provides tools to interact with a Tridion Docs DXD Content Service"
+  security:
+    oauth2:
+      client:
+        registration:
+          dxd-client:
+            client-id: ${DXD_CLIENT_ID:cduser}
+            client-secret: ${DXD_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+            client-authentication-method: client_secret_post
+        provider:
+          dxd-client:
+            token-uri: ${DXD_TOKEN_URL:http://localhost:8082/token.svc}
+
+content:
+  client-id: dxd-client
+  url: ${DXD_CONTENT_URL:http://localhost:8081/cd/api}
+
+debug: true
+
+logging:
+  level:
+    root: INFO
+    com.sdl.delivery.content.example.mcp.server: DEBUG
+    org.springframework.ai: DEBUG
+    org.springframework.security.oauth2.client: ERROR
+    org.springframework.security.oauth2: ERROR
+    org.springframework.security.web: INFO
+    org.springframework.web.reactive.function.client: ERROR
+    org.springframework: ERROR
+    reactor.netty.http.client: ERROR

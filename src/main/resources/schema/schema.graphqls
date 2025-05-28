@@ -1,0 +1,5413 @@
+schema {
+  query: ContentQuery
+  subscription: ContentSubscription
+}
+
+"""Exposes a URL that specifies the behaviour of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behaviour of this scalar."""
+  url: String!
+) on SCALAR
+
+"""
+Direct the client to resolve this field locally, either from the cache or local resolvers.
+"""
+directive @client(
+  """
+  When true, the client will never use the cache for this value. See
+  https://www.apollographql.com/docs/react/essentials/local-state/#forcing-resolvers-with-clientalways-true
+  """
+  always: Boolean
+) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+
+"""
+Export this locally resolved field as a variable to be used in the remainder of this query. See
+https://www.apollographql.com/docs/react/essentials/local-state/#using-client-fields-as-variables
+"""
+directive @export(
+  """The variable name to export this field as."""
+  as: String!
+) on FIELD
+
+"""
+Specify a custom store key for this result. See
+https://www.apollographql.com/docs/react/advanced/caching/#the-connection-directive
+"""
+directive @connection(
+  """Specify the store key."""
+  key: String!
+
+  """
+  An array of query argument names to include in the generated custom store key.
+  """
+  filter: [String!]
+) on FIELD
+
+type Addon {
+  """Addon author."""
+  author: String
+
+  """Addon configuration download URL."""
+  configurationDownloadUrl: String
+
+  """Addon description."""
+  description: String
+
+  """Addon download URL."""
+  downloadUrl: String!
+
+  """Addon name."""
+  name: String
+
+  """Addon package id."""
+  packageId: String!
+
+  """Addon version."""
+  version: String!
+}
+
+"""Represents ancestor's behaviour of the sitemap subtree response."""
+enum Ancestor {
+  """By default, do not return ancestors of the given taxonomy node."""
+  NONE
+
+  """Returns path from the root ancestor to the given taxonomy node."""
+  INCLUDE
+
+  """
+  Returns path from the root ancestor to the given taxonomy node and all siblings.
+  """
+  INCLUDE_ANCESTORS_WITH_SIBLINGS
+}
+
+"""Represents a component which has binary content."""
+type BinaryComponent implements ContentComponent & Item {
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the schema ID for the component."""
+  schemaId: Int
+
+  """Returns the list of taxonomies for the item."""
+  taxonomies(
+    """the list of taxonomy types to include in the result set"""
+    types: [TaxonomyType]
+  ): [TaxonomyItem]
+
+  """Returns the title of the item."""
+  title: String
+
+  """Identifies the type of the binary component."""
+  type: String!
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Returns the variants of the binary component."""
+  variants(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the specific variant to return (optional)"""
+    variant: String
+
+    """the specific variant URL"""
+    url: String
+  ): BinaryVariantConnection
+
+  """Returns true if the component is a multimedia (binary) component."""
+  multiMedia: Boolean @deprecated(reason: "Redundant given that BinaryComponents do not expose this property")
+}
+
+"""Represents a variant of a binary component."""
+type BinaryVariant {
+  """Identifies the binary ID of the variant."""
+  binaryId: Int!
+
+  """Returns the description of the variant."""
+  description: String
+
+  """Identifies the binary content URL of the variant."""
+  downloadUrl: String!
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Identifies the path of the variant."""
+  path: String!
+
+  """Identifies the type of the variant."""
+  type: String!
+
+  """Identifies the relative binary content URL of the variant."""
+  url: String!
+
+  """Identifies the variant ID of the variant."""
+  variantId: String!
+}
+
+"""A connection to a list of items."""
+type BinaryVariantConnection {
+  """a list of edges"""
+  edges: [BinaryVariantEdge]
+}
+
+"""An edge in a connection"""
+type BinaryVariantEdge {
+  """The item at the end of the edge"""
+  node: BinaryVariant
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+"""Represents an Ambient Data Framework claim value."""
+type ClaimValue {
+  """The claim value type."""
+  type: ClaimValueType!
+
+  """The claim URI."""
+  uri: String!
+
+  """The claim Value."""
+  value: String!
+}
+
+"""Represents the type of claim value."""
+enum ClaimValueType {
+  """A string value."""
+  STRING
+
+  """A date value."""
+  DATE
+
+  """A float value."""
+  FLOAT
+
+  """A number value."""
+  NUMBER
+
+  """A boolean value."""
+  BOOLEAN
+}
+
+"""Represents a regular component."""
+type Component implements ContentComponent & Item {
+  """Returns the content of the component."""
+  content(
+    """whether to render dynamic content tags"""
+    renderContent: Boolean
+  ): Content
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the schema ID for the component."""
+  schemaId: Int
+
+  """Returns the list of taxonomies for the item."""
+  taxonomies(
+    """the list of taxonomy types to include in the result set"""
+    types: [TaxonomyType]
+  ): [TaxonomyItem]
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Returns true if the component is a multimedia (binary) component."""
+  multiMedia: Boolean @deprecated(reason: "Redundant given that BinaryComponents do not expose this property")
+
+  """Resolve component link to a page."""
+  resolvedLink(
+    """
+    Set to true to render a relative link, or to false to render an absolute link (true by default).
+    """
+    renderRelativeLink: Boolean
+  ): Link
+}
+
+"""
+Represents a component presentation which has a component associated with a template.
+"""
+type ComponentPresentation implements ContentFragment & Item {
+  """Returns the component of the component presentation."""
+  component: ContentComponent
+
+  """Returns the component template of the component presentation."""
+  componentTemplate: Template
+
+  """Returns the content of this fragment."""
+  content: Content
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the raw content of the component presentation."""
+  rawContent(
+    """whether to render dynamic content tags"""
+    renderContent: Boolean
+  ): RawContent
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+}
+
+"""A connection to a list of items."""
+type ComponentPresentationConnection {
+  """a list of edges"""
+  edges: [ComponentPresentationEdge]
+}
+
+"""An edge in a connection"""
+type ComponentPresentationEdge {
+  """The item at the end of the edge"""
+  node: ComponentPresentation
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+type Concept {
+  """Returns the alternative labels for concept."""
+  alternativeLabels: [String]
+
+  """
+  Returns the concept Id. These are case sensitive, so do not mix case when defining IDs.
+  """
+  id: String
+
+  """Returns the concept label."""
+  label: String
+
+  """Returns the narrower concepts."""
+  narrowerConcepts(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+  ): TaxonomyNarrowerConceptsConnection
+
+  """Returns the parent concept Id graph."""
+  parentConceptIdsGraph: [String]
+
+  """Returns the parent concept Uri graph."""
+  parentConceptsGraph: [String]
+
+  """Returns the related concept Ids graph."""
+  relatedConceptIds: [String]
+
+  """Returns the related concept labels."""
+  relatedConceptLabels: [String]
+
+  """Returns the related concepts."""
+  relatedConcepts(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+  ): TaxonomyRelatedConceptsConnection
+
+  """Returns the concept Uri."""
+  uri: String
+}
+
+type ConceptAggregation {
+  """Returns the concept hits."""
+  count: Int
+
+  """
+  Returns the concept Id. These are case sensitive, so do not mix case when defining IDs.
+  """
+  id: String
+
+  """Returns the concept label."""
+  label: String
+
+  """Returns the concept URI."""
+  uri: String
+}
+
+"""Represents a concept facet."""
+type ConceptFacet implements Facet {
+  """Identifies the unique ID of the facet."""
+  id: String
+
+  """Concepts."""
+  concepts: [ConceptAggregation]
+
+  """Connector ID."""
+  connectorId: String
+
+  """Concept scheme title."""
+  title: String
+
+  """Concept scheme URI."""
+  uri: String
+}
+
+"""Concept Scheme."""
+type ConceptScheme {
+  """Returns the default language for this concept scheme."""
+  defaultLanguage: String
+
+  """Returns the concept scheme language."""
+  language: String
+
+  """Returns the top-level concepts (no parents) for this concept scheme."""
+  topConcepts(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+  ): TaxonomyTopConceptsSearchResultsConnection
+
+  """
+  Returns the results of a concept search within this particular concept scheme.
+  """
+  concepts: [Concept]
+
+  """Returns the connector Id for this concept scheme."""
+  connectorId: String
+
+  """Returns the concept scheme title."""
+  title: String
+
+  """Returns the concept scheme uri."""
+  uri: String
+}
+
+type ConceptSuggestion {
+  """Returns the alternative labels for concept."""
+  alternativeLabels: [String]
+
+  """Returns the connector Id."""
+  connectorId: String
+
+  """Returns number of documents marked with concept."""
+  count: Int
+
+  """Returns the concept highlighted label."""
+  highlight: [String]
+
+  """
+  Returns the concept Id. These are case sensitive, so do not mix case when defining IDs.
+  """
+  id: String
+
+  """Returns the concept label."""
+  label: String
+
+  """Returns the narrower concepts."""
+  narrowerConcepts(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+  ): TaxonomyNarrowerConceptsConnection
+
+  """Returns the parent concept Id graph."""
+  parentConceptIdsGraph: [String]
+
+  """Returns the parent concept Uri graph."""
+  parentConceptsGraph: [String]
+
+  """Returns the related concept Ids graph."""
+  relatedConceptIds: [String]
+
+  """Returns the related concept labels."""
+  relatedConceptLabels: [String]
+
+  """Returns the related concepts."""
+  relatedConcepts(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+  ): TaxonomyRelatedConceptsConnection
+
+  """Returns the concept Uri."""
+  uri: String
+}
+
+"""A connection to a list of items."""
+type ConceptSuggestionConnection {
+  """a list of edges"""
+  edges: [ConceptSuggestionEdge]
+}
+
+"""An edge in a connection"""
+type ConceptSuggestionEdge {
+  """The item at the end of the edge"""
+  node: ConceptSuggestion
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+"""Represents a container for items."""
+interface Container {
+  """Returns the items in this container."""
+  containerItems(
+    """the container types to include in the result set (optional)"""
+    types: [ContainerType]
+  ): [Item]
+}
+
+"""Represents the type of container."""
+enum ContainerType {
+  """A component presentation container."""
+  COMPONENT_PRESENTATION
+}
+
+interface Content {
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Identifies the type of the content."""
+  type: String
+}
+
+"""Represents a component which has content."""
+interface ContentComponent {
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the schema ID for the component."""
+  schemaId: Int
+
+  """Returns the list of taxonomies for the item."""
+  taxonomies(
+    """the list of taxonomy types to include in the result set"""
+    types: [TaxonomyType]
+  ): [TaxonomyItem]
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Returns true if the component is a multimedia (binary) component."""
+  multiMedia: Boolean @deprecated(reason: "Redundant given that BinaryComponents do not expose this property")
+}
+
+enum ContentFilterQueryType {
+  """CUSTOM_META"""
+  CUSTOM_META
+}
+
+"""Represents a fragment of content."""
+interface ContentFragment {
+  """Returns the content of this fragment."""
+  content: Content
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+}
+
+"""The query root for the GraphQL Public Content API."""
+type ContentQuery {
+  """
+  Returns the binary component given its CM_URI (takes precedence over the other
+  arguments).ONLY if CM_URI is not specified, the binary is identified by its
+  namespaceId, publicationId and binaryId. Alternatively a binary variant URL
+  can be used instead of a binary ID.
+  """
+  binaryComponent(
+    """the namespace ID"""
+    namespaceId: Int
+
+    """the publication ID"""
+    publicationId: Int
+
+    """the binary ID"""
+    binaryId: Int
+
+    """the binary variant relative URL"""
+    url: String
+
+    """the binary CM URI"""
+    cmUri: String
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): BinaryComponent
+
+  """Resolve a link by parameters."""
+  binaryLink(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the binary id"""
+    binaryId: Int!
+
+    """the binary variant id for binary link"""
+    variantId: String
+
+    """whether to render relative link (true by default)"""
+    renderRelativeLink: Boolean
+  ): Link
+
+  """Returns the categories for the given namespace and publication IDs."""
+  categories(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): KeywordConnection
+
+  """
+  Returns a category given an ID or name for a given namespace and publication ID.
+  """
+  category(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the category ID"""
+    categoryId: Int
+
+    """the category name"""
+    categoryName: String
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): Keyword
+
+  """Returns the component given the namespace, publication, component IDs."""
+  component(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the component ID"""
+    componentId: Int!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): Component
+
+  """Resolve a link by parameters."""
+  componentLink(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the id of the page you want to receive a link from"""
+    sourcePageId: Int
+
+    """the id of the component you want to link to"""
+    targetComponentId: Int!
+
+    """the id of the template to exclude from linking"""
+    excludeComponentTemplateId: Int
+
+    """whether to render relative link (true by default)"""
+    renderRelativeLink: Boolean
+  ): Link
+
+  """
+  Returns the component presentation given the namespace, publication, component and template IDs.
+  """
+  componentPresentation(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the component ID"""
+    componentId: Int!
+
+    """the template ID"""
+    templateId: Int!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): ComponentPresentation
+
+  """Get a list of component presentations filtered by set of criteria."""
+  componentPresentations(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """Component Presentation Filter"""
+    filter: InputComponentPresentationFilter!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+
+    """item sorting"""
+    sort: InputSortParam
+  ): ComponentPresentationConnection
+
+  """Resolve a link by parameters."""
+  dynamicComponentLink(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the target page id"""
+    targetPageId: Int!
+
+    """the id of the component you want to link to"""
+    targetComponentId: Int!
+
+    """the target template id"""
+    targetTemplateId: Int!
+
+    """whether to render relative link (true by default)"""
+    renderRelativeLink: Boolean
+  ): Link
+
+  """Get a list of items filtered by set of criteria."""
+  items(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """Item Filter"""
+    filter: InputItemFilter!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+
+    """item sorting"""
+    sort: InputSortParam
+  ): ItemConnection
+
+  """
+  Returns the keyword for the given namespace, publication, category and keyword IDs.
+  """
+  keyword(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the category ID"""
+    categoryId: Int!
+
+    """the keyword ID"""
+    keywordId: Int!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): Keyword
+
+  """
+  Returns the page given its CM_URI. Takes precedence over the other
+  arguments.ONLY If CM_URI is not specified, the page is identified by its
+  namespaceId, publicationId and pageId. Alternatively a page URL can be used
+  instead of a page ID.
+  """
+  page(
+    """the namespace ID"""
+    namespaceId: Int
+
+    """the publication ID"""
+    publicationId: Int
+
+    """the page ID"""
+    pageId: Int
+
+    """the page URL path"""
+    url: String
+
+    """the page CM URI"""
+    cmUri: String
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): Page
+
+  """Resolve a link by parameters."""
+  pageLink(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the page id for page link"""
+    pageId: Int!
+
+    """whether to render relative link (true by default)"""
+    renderRelativeLink: Boolean
+  ): Link
+
+  """
+  Returns the list of pages matching the provided namespace ID and page URL.
+  """
+  pages(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the page URL"""
+    url: String!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): PageConnection
+
+  """
+  Returns the publication given the specified namespace and publication IDs.
+  """
+  publication(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): Publication
+
+  """
+  Returns the publication mapping given the specified namespace and site URL.
+  """
+  publicationMapping(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """site URL"""
+    siteUrl: String!
+
+    """the publication mapping strategies"""
+    publicationMappingStrategy: [MappingStrategyType]
+  ): PublicationMapping
+
+  """
+  Returns the publication mappings for all publications or specified publication within the specified namespace.
+  """
+  publicationMappings(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int
+
+    """optional site URL(s) to match against"""
+    siteUrls: [String]
+
+    """specify if protocol is used during match"""
+    matchProtocol: Boolean
+
+    """specify if port is used during match"""
+    matchPort: Boolean
+
+    """specify if domain is used during match"""
+    matchDomain: Boolean
+
+    """specify if path is used during match"""
+    matchPath: Boolean
+  ): PublicationMappingConnection
+
+  """
+  Returns the list of publications given the namespace ID and an optional filter.
+  """
+  publications(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publications filter"""
+    filter: InputPublicationFilter
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): PublicationConnection
+
+  """Get navigation site map."""
+  sitemap(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the navigation marker used on category names"""
+    navigationMarker: String
+
+    """the category ID used for navigation"""
+    categoryId: Int
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): TaxonomySitemapItem
+
+  """Get navigation site map subtree."""
+  sitemapStructure(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int
+
+    """the root taxonomy node ID"""
+    rootTaxonomyNodeId: String
+
+    """the depth to return"""
+    depth: Int
+
+    """include custom metadata"""
+    includeCustomMeta: Boolean
+
+    """
+    list of custom metadata keys to include. If you do not specify any values all custom meta will be returned
+    """
+    explicitCustomMetaList: [String]
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): UntypedContent
+
+  """Get navigation site map subtree."""
+  sitemapSubtree(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int
+
+    """the taxonomy node ID"""
+    taxonomyNodeId: String
+
+    """whether to include ancestor information"""
+    ancestor: Ancestor
+
+    """whether to exclude page types"""
+    excludePages: Boolean
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): [TaxonomySitemapItem]
+
+  """
+  Returns the structure group for the given namespace, publication and structure group IDs.
+  """
+  structureGroup(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the structure group ID"""
+    structureGroupId: Int!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): StructureGroup
+
+  """
+  Returns the structure groups for the given namespace and publication IDs.
+  """
+  structureGroups(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): StructureGroupConnection
+
+  """
+  Returns the typed component given the namespace, publication, component IDs.
+  """
+  typedComponent(
+    """the namespace ID"""
+    namespaceId: Int!
+
+    """the publication ID"""
+    publicationId: Int!
+
+    """the component ID"""
+    componentId: Int!
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): ContentComponent
+
+  """
+  Returns the typed page given its CM_URI. Takes precedence over the other
+  arguments.ONLY If CM_URI is not specified, the page is identified by its
+  namespaceId, publicationId and pageId. Alternatively a page URL can be used
+  instead of a page ID.
+  """
+  typedPage(
+    """the namespace ID"""
+    namespaceId: Int
+
+    """the publication ID"""
+    publicationId: Int
+
+    """the page ID"""
+    pageId: Int
+
+    """the page URL path"""
+    url: String
+
+    """the page CM URI"""
+    cmUri: String
+
+    """the context data"""
+    contextData: [InputClaimValue]
+  ): PageItem
+
+  """Suggest"""
+  suggest(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """Connector Id."""
+    connectorId: String
+
+    """Partial label."""
+    label: String!
+
+    """Language."""
+    language: String
+
+    """Enable fuzziness."""
+    fuzzy: Boolean
+
+    """
+    Filter results to match facets used within your content, avoiding dead ends.
+    """
+    used: Boolean
+  ): ConceptSuggestionConnection
+
+  """Taxonomy search."""
+  taxonomy(
+    """Connector Id."""
+    connectorId: String
+
+    """Concept scheme title."""
+    title: String
+
+    """Concept Ids to search for within the concept scheme(s)."""
+    conceptIds: [String]
+
+    """Concept scheme language."""
+    language: String
+  ): [ConceptScheme]
+
+  """Get addons."""
+  addons(
+    """
+    list of extension types to filter addons. If you do not specify any values all extensions will be returned
+    """
+    extensionTypes: [String]
+  ): [Addon]
+
+  """
+  Invokes the specified model to run inference using the prompt provided. The
+  prompt will be reformatted to match the underlying LLM implementation.
+  """
+  invokeLLM(prompt: String!, llmRequestParameters: InputllmRequestParameters): LLMResponse
+
+  """
+  RAG-based trustable chat query. Performs a neural search first to fetch
+  documents related to the question, and invokes a LLM with those documents as
+  context. Keeps track of chat history when a memory ID is passed within neural
+  search parameter.
+  """
+  trustableChat(question: String!, context: Inputcontext, neuralSearchParameters: InputneuralSearchParameters, llmRequestParameters: InputllmRequestParameters): TrustableChatLLMResponse
+
+  """ISH recommend query that performs a hybrid query on OS."""
+  ishRecommend(topicId: String!): IshRecommendResult
+
+  """Faceted search using a criteria."""
+  search(
+    """Search criteria for searching the index."""
+    criteria: InputCriteria
+
+    """Search DSL output of SearchQuery builder."""
+    rawCriteria: String
+
+    """Recommendation parameters."""
+    recommend: InputRecommendation
+
+    """Filtering and highlighting the search results."""
+    resultFilter: InputResultFilter
+
+    """Sorting the search results."""
+    sortBy: InputSortBy
+
+    """Configure facets to include in the result set."""
+    facets: InputFacets
+  ): FacetedSearchResults
+
+  """Get ish publication given the specified publication Id."""
+  ishPublication(
+    """the publication ID"""
+    publicationId: Int!
+  ): IshPublication
+
+  """Get list of ish publications."""
+  ishPublications(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the publications filter"""
+    filter: InputPublicationFilter
+  ): IshPublicationConnection
+
+  """Get TOC for a given publication."""
+  ishToc(
+    """the publication ID"""
+    publicationId: Int!
+
+    """
+    list of custom metadata keys to include. If you do not specify any values all custom meta will be returned
+    """
+    explicitCustomMetaList: [String]
+
+    """the conditions"""
+    conditions: [InputIshCondition]
+
+    """the conditions to exclude"""
+    excludeConditions: [InputIshCondition]
+  ): IshToc
+
+  """Get TOC snippet for a given publication."""
+  ishTocSnippet(
+    """the publication ID"""
+    publicationId: Int!
+
+    """the number of items to return"""
+    top: Int!
+
+    """
+    list of custom metadata keys to include. If you do not specify any values all custom meta will be returned
+    """
+    explicitCustomMetaList: [String]
+
+    """the conditions"""
+    conditions: [InputIshCondition]
+
+    """the conditions to exclude"""
+    excludeConditions: [InputIshCondition]
+  ): [IshTocItem]
+
+  """Get TOC structure for a given publication."""
+  ishTocStructure(
+    """the publication ID"""
+    publicationId: Int!
+
+    """the parent TOC ID"""
+    tocId: String
+
+    """the depth to return"""
+    depth: Int
+
+    """include custom metadata"""
+    includeCustomMeta: Boolean
+
+    """
+    list of custom metadata keys to include. If you do not specify any values all custom meta will be returned
+    """
+    explicitCustomMetaList: [String]
+
+    """the conditions"""
+    conditions: [InputIshCondition]
+
+    """the conditions to exclude"""
+    excludeConditions: [InputIshCondition]
+
+    """Retrieve prebuilt Toc"""
+    prebuilt: Boolean
+  ): UntypedContent
+
+  """Get topic by Id or Url."""
+  ishTopic(
+    """the publication ID"""
+    publicationId: Int
+
+    """the topic ID"""
+    itemId: Int
+
+    """the topic URL path"""
+    url: String
+
+    """rendering mode for topic"""
+    topicRenderingOptions: IshTopicRenderOptions
+
+    """rendering mode for topic links"""
+    topicLinkRenderOptions: IshTopicLinkRenderOptions
+
+    """link url prefix"""
+    topicLinkUrlPrefix: String
+
+    """binary link url prefix"""
+    topicBinaryLinkUrlPrefix: String
+
+    """the conditions"""
+    conditions: [InputIshCondition]
+
+    """the conditions to exclude"""
+    excludeConditions: [InputIshCondition]
+
+    """skip all topic processing"""
+    skipTopicProcessing: Boolean
+  ): IshTopic
+
+  """Get a list of topics matching filter."""
+  ishTopics(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """Topic Filter"""
+    filter: InputIshItemFilter!
+
+    """rendering mode for topic"""
+    topicRenderingOptions: IshTopicRenderOptions
+
+    """rendering mode for topic links"""
+    topicLinkRenderOptions: IshTopicLinkRenderOptions
+
+    """link url prefix"""
+    topicLinkUrlPrefix: String
+
+    """binary link url prefix"""
+    topicBinaryLinkUrlPrefix: String
+
+    """the conditions"""
+    conditions: [InputIshCondition]
+
+    """the conditions to exclude"""
+    excludeConditions: [InputIshCondition]
+
+    """item sorting"""
+    sort: InputSortParam
+  ): IshTopicConnection
+
+  """Get a list of topics matching filter."""
+  ishTopicsByLogicalRefId(
+    """Topic Logical Ref"""
+    logicalRefId: String!
+  ): [IshTopicsByLogicalRef]
+}
+
+"""Content subscription"""
+type ContentSubscription {
+  """
+  RAG-based trustable chat subscription. Performs a neural search first to fetch
+  documents related to the question, and invokes a LLM with those documents as
+  context. Keeps track of chat history when a memory ID is passed within neural
+  search parameter.
+  """
+  trustableChat(question: String, context: Inputcontext, neuralSearchParameters: InputneuralSearchParameters, llmRequestParameters: InputllmRequestParameters): TrustableChatLLMResponse
+}
+
+enum CriteriaScope {
+  """Publication"""
+  Publication
+
+  """Item"""
+  Item
+
+  """ItemInPublication"""
+  ItemInPublication
+}
+
+"""Represents custom metadata."""
+type CustomMeta {
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Identifies the item ID of the custom meta."""
+  itemId: Int!
+
+  """Identifies the key of the custom meta."""
+  key: String!
+
+  """Identifies the namespace ID of the custom meta."""
+  namespaceId: Int!
+
+  """Identifies the publication ID of the custom meta."""
+  publicationId: Int!
+
+  """Identifies the value of the custom meta."""
+  value: String!
+
+  """Identifies the value type of the custom meta."""
+  valueType: CustomMetaValueType!
+}
+
+"""A connection to a list of items."""
+type CustomMetaConnection {
+  """a list of edges"""
+  edges: [CustomMetaEdge]
+}
+
+"""An edge in a connection"""
+type CustomMetaEdge {
+  """The item at the end of the edge"""
+  node: CustomMeta
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+enum CustomMetaValueType {
+  """STRING"""
+  STRING
+
+  """DATE"""
+  DATE
+
+  """FLOAT"""
+  FLOAT
+
+  """NUMBER"""
+  NUMBER
+
+  """UNKNOWN"""
+  UNKNOWN
+}
+
+enum DateRangeType {
+  """CREATION_DATE"""
+  CREATION_DATE
+
+  """UPDATED_DATE"""
+  UPDATED_DATE
+
+  """INITIAL_PUBLISH_DATE"""
+  INITIAL_PUBLISH_DATE
+
+  """LAST_PUBLISH_DATE"""
+  LAST_PUBLISH_DATE
+}
+
+"""Represents a facet node."""
+interface Facet {
+  """Identifies the unique ID of the facet."""
+  id: String
+}
+
+"""Faceted search results."""
+type FacetedSearchResults {
+  """Facets."""
+  facets(
+    """
+    Selection for results, if missing concept scheme default language will used.
+    """
+    language: String
+  ): [Facet]
+
+  """Search results."""
+  results(
+    """
+    Fetching only nodes after this node (exclusive). Use only with the first parameter.
+    """
+    after: String
+
+    """fetching only the first certain number of nodes."""
+    first: Int
+  ): SearchResultsConnection
+}
+
+type FieldValueAggregation {
+  """Facet count"""
+  count: Int
+
+  """Facet value"""
+  value: String
+}
+
+"""Represents a Field facet."""
+type FieldValueFacet implements Facet {
+  """Identifies the unique ID of the facet."""
+  id: String
+
+  """Buckets."""
+  buckets: [FieldValueAggregation]
+
+  """Field."""
+  field: String
+}
+
+enum FilterItemType {
+  """PUBLICATION"""
+  PUBLICATION
+
+  """COMPONENT"""
+  COMPONENT
+
+  """COMPONENT_TEMPLATE"""
+  COMPONENT_TEMPLATE
+
+  """PAGE"""
+  PAGE
+
+  """PAGE_TEMPLATE"""
+  PAGE_TEMPLATE
+
+  """CATEGORY"""
+  CATEGORY
+
+  """KEYWORD"""
+  KEYWORD
+}
+
+"""Represents an Ambient Data Framework claim value."""
+input InputClaimValue {
+  """The claim value type."""
+  type: ClaimValueType!
+
+  """The claim URI."""
+  uri: String!
+
+  """The claim Value."""
+  value: String!
+}
+
+"""
+Filter for the componentPresentation root query. When the filter is applied,
+only the component presentations matching the filter will be in the query result
+"""
+input InputComponentPresentationFilter {
+  """
+  List of filters. Items in the query result will match ALL of the elements of the list
+  """
+  and: [InputComponentPresentationFilter]
+  customMeta: InputCustomMetaCriteria
+  dateRange: InputDateRangeCriteriaImpl
+  keyword: InputKeywordCriteria
+
+  """
+  List of filters. Items in the query result will match ANY of the elements of the list
+  """
+  or: [InputComponentPresentationFilter]
+  schema: InputSchemaCriteria
+  template: InputTemplateCriteria
+}
+
+input InputConcept {
+  """Concept IDs"""
+  conceptIds: [String]
+
+  """Concept labels"""
+  conceptLabels: [String]
+
+  """Namespace connector ID"""
+  connectorId: String
+
+  """Language"""
+  language: String
+
+  """Concept scheme title"""
+  schemeTitle: String
+}
+
+"""Concept Facet"""
+input InputConceptFacet {
+  """Concept scheme Title"""
+  schemeTitle: String
+
+  """Connector namespace Id."""
+  connectorId: String
+
+  """
+  Maximum number of results per concept scheme. Pass -1 to retrieve all results.
+  """
+  first: Int
+
+  """Language"""
+  language: String
+}
+
+"""Input Concept Recommendation"""
+input InputConceptRecommendation {
+  """Boost factor for given concept scheme. Default value is 1.0"""
+  boostBy: Float
+
+  """
+  Parent level used when broadening the results with hierarchy for given concept
+  scheme. Default value is 0, broadening will not happen. When value is 1 or
+  higher, broadening will happen until given level.
+  """
+  broadenBy: Int
+
+  """When defined concept IDs will be used for recommendations"""
+  conceptIds: [String]
+
+  """Namespace connector ID"""
+  connectorId: String!
+}
+
+"""Chat context for neural search."""
+input Inputcontext {
+  criteria: InputCriteria
+  productFamily: String
+  productRelease: String
+  topicId: String
+}
+
+input InputCriteria {
+  and: [InputCriteria]
+  concept: InputConcept
+  field: InputField
+  groupBy: [InputCriteria]
+  id: InputId
+  languageField: InputFieldLanguage
+  localeField: InputLocaleField
+  metadataField: InputFieldMetadata
+  or: [InputCriteria]
+}
+
+input InputCustomMetaCriteria {
+  key: String!
+
+  """If not given, defaults to Item"""
+  scope: CriteriaScope
+  value: String!
+  valueType: CustomMetaValueType
+}
+
+input InputDateRangeCriteriaImpl {
+  """End date & time"""
+  end: String
+
+  """Start date & time"""
+  start: String
+
+  """Date range type"""
+  type: DateRangeType
+}
+
+"""Input Facets"""
+input InputFacets {
+  """Concept facets"""
+  concepts: [InputConceptFacet]
+
+  """Field Value facets"""
+  fields: [InputFieldValueFacet]
+}
+
+input InputField {
+  """Boost factor for a Field. Default value is 1.0"""
+  boostBy: Float
+  key: String!
+  strict: Boolean
+  value: String!
+}
+
+input InputFieldLanguage {
+  """Boost factor for a FieldLanguage. Default value is 1.0"""
+  boostBy: Float
+  key: String!
+  language: String
+  strict: Boolean
+  value: String!
+}
+
+input InputFieldMetadata {
+  keys: [String]!
+  strict: Boolean
+  type: MetadataFieldType
+  value: String!
+}
+
+"""Field Value Facet"""
+input InputFieldValueFacet {
+  """Maximum number of results per key. Pass -1 to retrieve all results."""
+  first: Int
+
+  """Key."""
+  key: String
+}
+
+input InputId {
+  values: [String]!
+}
+
+"""Represents an ish condition."""
+input InputIshCondition {
+  """The condition name."""
+  name: String!
+
+  """The condition values."""
+  values: [String]!
+}
+
+"""
+Docs Item filter for the topics root query. When the filter is applied, only the
+items matching the filter will be in the query result
+"""
+input InputIshItemFilter {
+  """
+  List of filters. Items in the query result will match ALL of the elements of the list
+  """
+  and: [InputIshItemFilter]
+  customMeta: InputCustomMetaCriteria
+
+  """
+  List of filters. Items in the query result will match ANY of the elements of the list
+  """
+  or: [InputIshItemFilter]
+
+  """list of publication IDs"""
+  publicationIds: [Int]
+}
+
+"""
+Item filter for the items root query. When the filter is applied, only the items
+matching the filter will be in the query result
+"""
+input InputItemFilter {
+  """
+  List of filters. Items in the query result will match ALL of the elements of the list
+  """
+  and: [InputItemFilter]
+  customMeta: InputCustomMetaCriteria
+
+  """list of item types to be selected"""
+  itemTypes: [FilterItemType]
+  keyword: InputKeywordCriteria
+
+  """list of namespace IDs"""
+  namespaceIds: [Int]
+
+  """
+  List of filters. Items in the query result will match ANY of the elements of the list
+  """
+  or: [InputItemFilter]
+
+  """list of publication IDs"""
+  publicationIds: [Int]
+  schema: InputSchemaCriteria
+}
+
+input InputKeywordCriteria {
+  """
+  Id of the category. Takes precedence over categoryName, if both are present
+  """
+  categoryId: Int
+  categoryName: String
+  key: String
+
+  """Id of the keyword. Takes precedence over key, if both are present"""
+  keywordId: Int
+}
+
+input InputllmRequestParameters {
+  maxTokens: Int
+  stopSequences: [String]
+  temperature: Float
+  topK: Int
+  topP: Float
+}
+
+input InputLocaleField {
+  key: String!
+  locale: String
+  value: String!
+}
+
+"""Input parameter to neural search"""
+input InputneuralSearchParameters {
+  language: String
+  locale: String
+  memoryId: String
+  k: Int
+}
+
+"""Represents a filter for a publication query."""
+input InputPublicationFilter {
+  """Represents the query type for the filter."""
+  queryType: ContentFilterQueryType
+
+  """Represents the value to filter by in the form of 'key=value' pair."""
+  value: String
+
+  """
+  Represents the custom meta value type for the filter. UNKNOWN not supported. Defaults to 'String', if empty.
+  """
+  valueType: CustomMetaValueType
+}
+
+"""Input parameter to enable recommendations"""
+input InputRecommendation {
+  """Recommend items for the given concepts"""
+  concepts: [InputConceptRecommendation]
+
+  """Recommend items for the given item ID"""
+  id: String
+
+  """Recommendation mode"""
+  mode: RecommendationMode
+}
+
+"""Filtering and highlighting the search results"""
+input InputResultFilter {
+  """Fields that will be excluded from results."""
+  excludeFields: [String]
+
+  """Parameter to enable highlight in all."""
+  highlightInAllIsEnabled: Boolean
+
+  """Parameter to enable highlight."""
+  highlightingIsEnabled: Boolean
+}
+
+input InputSchemaCriteria {
+  """Id of the schema. Takes precedence over title, if both are present"""
+  id: Int
+
+  """
+  Title of the schema. Applicable only for schemas related to dynamic component presentations.
+  """
+  title: String
+}
+
+"""Sorting the search results"""
+input InputSortBy {
+  """Fields to sort."""
+  fields: [String]!
+
+  """Sort values as text."""
+  sortAsText: Boolean
+
+  """Sorting direction."""
+  sortingDirection: SortingDirectionType!
+}
+
+"""
+Represents a typical sort type. When used, the default sorting mechanism (by namespace and by id) is overridden
+"""
+input InputSortParam {
+  """
+  The custom meta key used for sorting. Mandatory only for SortOrderType.CUSTOM_META sort type.
+  """
+  key: String
+
+  """The custom meta key type used for sorting"""
+  keyType: MetadataType
+
+  """The sort order type."""
+  order: SortOrderType!
+
+  """The item field used for sorting"""
+  sortBy: SortFieldType!
+}
+
+input InputTemplateCriteria {
+  """Id of the template."""
+  id: Int
+}
+
+"""Represents a concept topic."""
+type IshConceptTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshConceptTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a concept topic body."""
+type IshConceptTopicBody {
+  """Returns the anonymous topic body sections."""
+  anonymousSections: [IshTopicSection]
+
+  """Return Examples"""
+  examples: [IshTopicSection]
+
+  """Returns the topic body sections."""
+  sections(
+    """the section name filter (optional)"""
+    sectionNameFilter: String
+  ): [IshTopicSection]
+
+  """Topic XHTML"""
+  xhtml: String
+}
+
+"""Represents a collection of ish conditions."""
+type IshConditions {
+  """The conditions definitions."""
+  conditionDefinitions: Map
+
+  """The publication defined conditions."""
+  publicationDefinedConditions: Map
+
+  """The used conditions."""
+  usedConditions: Map
+}
+
+"""Represents a generic topic."""
+type IshGenericTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshGenericTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a generic topic body."""
+type IshGenericTopicBody {
+  """Returns the anonymous topic body sections."""
+  anonymousSections: [IshTopicSection]
+
+  """Return Examples"""
+  examples: [IshTopicSection]
+
+  """Returns the topic body sections."""
+  sections(
+    """the section name filter (optional)"""
+    sectionNameFilter: String
+  ): [IshTopicSection]
+
+  """Topic XHTML"""
+  xhtml: String
+}
+
+"""Represents a glossary entry topic."""
+type IshGlossaryEntryTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshConceptTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Glossary Definition"""
+  glossaryDefinition: IshTopicSection
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a glossary group topic."""
+type IshGlossaryGroupTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshConceptTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Glossary Entries"""
+  glossaryEntries: [IshGlossaryEntryTopic]
+
+  """Glossary Groups"""
+  glossaryGroups: [IshGlossaryGroupTopic]
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a learning assessment topic."""
+type IshLearningAssessmentTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshLearningAssessmentTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a learning assessment topic body."""
+type IshLearningAssessmentTopicBody {
+  """Returns the anonymous topic body sections."""
+  anonymousSections: [IshTopicSection]
+
+  """Return lcDuration"""
+  lcDuration: IshTopicSection
+
+  """Return lcInteraction"""
+  lcInteraction: [IshTopicSection]
+
+  """Return lcIntro"""
+  lcIntro: IshTopicSection
+
+  """Return lcObjectives"""
+  lcObjectives: IshTopicSection
+
+  """Return lcSummary"""
+  lcSummary: IshTopicSection
+
+  """Returns the topic body sections."""
+  sections(
+    """the section name filter (optional)"""
+    sectionNameFilter: String
+  ): [IshTopicSection]
+
+  """Topic XHTML"""
+  xhtml: String
+}
+
+"""Represents a learning content topic."""
+type IshLearningContentTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshLearningContentTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a learning content topic body."""
+type IshLearningContentTopicBody {
+  """Returns the anonymous topic body sections."""
+  anonymousSections: [IshTopicSection]
+
+  """Return lcChallenge"""
+  lcChallenge: IshTopicSection
+
+  """Return lcDuration"""
+  lcDuration: [IshTopicSection]
+
+  """Return lcIntructions"""
+  lcInstruction: IshTopicSection
+
+  """Return lcIntro"""
+  lcIntro: [IshTopicSection]
+
+  """Return lcObjectives"""
+  lcObjectives: [IshTopicSection]
+
+  """Returns the topic body sections."""
+  sections(
+    """the section name filter (optional)"""
+    sectionNameFilter: String
+  ): [IshTopicSection]
+
+  """Topic XHTML"""
+  xhtml: String
+}
+
+"""Represents a learning overview topic."""
+type IshLearningOverviewTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshLearningOverviewTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a learning overview topic body."""
+type IshLearningOverviewTopicBody {
+  """Returns the anonymous topic body sections."""
+  anonymousSections: [IshTopicSection]
+
+  """Return lcAudience"""
+  lcAudience: [IshTopicSection]
+
+  """Return lcDuration"""
+  lcDuration: IshTopicSection
+
+  """Return lcObjectives"""
+  lcObjectives: IshTopicSection
+
+  """Return lcPrereqs"""
+  lcPrereqs: IshTopicSection
+
+  """Return lcResources"""
+  lcResources: IshTopicSection
+
+  """Returns the topic body sections."""
+  sections(
+    """the section name filter (optional)"""
+    sectionNameFilter: String
+  ): [IshTopicSection]
+
+  """Topic XHTML"""
+  xhtml: String
+}
+
+"""Represents a learning plan topic."""
+type IshLearningPlanTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshLearningPlanTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a learning plan topic body."""
+type IshLearningPlanTopicBody {
+  """Returns the anonymous topic body sections."""
+  anonymousSections: [IshTopicSection]
+
+  """Return lcGapAnalysis"""
+  lcGapAnalysis: IshTopicSection
+
+  """Return lcIntervention"""
+  lcIntervention: IshTopicSection
+
+  """Return lcNeedsAnalysis"""
+  lcNeedsAnalysis: IshTopicSection
+
+  """Return lcProject"""
+  lcProject: IshTopicSection
+
+  """Return lcTechnical"""
+  lcTechnical: IshTopicSection
+
+  """Returns the topic body sections."""
+  sections(
+    """the section name filter (optional)"""
+    sectionNameFilter: String
+  ): [IshTopicSection]
+
+  """Topic XHTML"""
+  xhtml: String
+}
+
+"""Represents a learning summary topic."""
+type IshLearningSummaryTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshLearningSummaryTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a learning summary topic body."""
+type IshLearningSummaryTopicBody {
+  """Returns the anonymous topic body sections."""
+  anonymousSections: [IshTopicSection]
+
+  """Return lcNextSteps"""
+  lcNextSteps: [IshTopicSection]
+
+  """Return lcObjectives"""
+  lcObjectives: [IshTopicSection]
+
+  """Return lcResources"""
+  lcResources: [IshTopicSection]
+
+  """Return lcReview"""
+  lcReview: [IshTopicSection]
+
+  """Return lcSummary"""
+  lcSummary: [IshTopicSection]
+
+  """Returns the topic body sections."""
+  sections(
+    """the section name filter (optional)"""
+    sectionNameFilter: String
+  ): [IshTopicSection]
+
+  """Topic XHTML"""
+  xhtml: String
+}
+
+type IshPublication {
+  """Get conditions for the publication."""
+  conditions: IshConditions
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Metadata"""
+  metadata: IshPublicationMetadata
+
+  """Returns the multimedia path for the publication."""
+  multimediaPath: String
+
+  """Returns the multimedia URL for the publication."""
+  multimediaUrl: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the publication key."""
+  publicationKey: String
+
+  """Returns the publication path."""
+  publicationPath: String
+
+  """Returns the publication URL."""
+  publicationUrl: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+}
+
+"""A connection to a list of items."""
+type IshPublicationConnection {
+  """a list of edges"""
+  edges: [IshPublicationEdge]
+}
+
+"""An edge in a connection"""
+type IshPublicationEdge {
+  """The item at the end of the edge"""
+  node: IshPublication
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+type IshPublicationMetadata {
+  """Created On"""
+  createdOn: String
+
+  """Locale"""
+  locale: String
+
+  """Logical Ref"""
+  logicalRef: String
+
+  """Modified On"""
+  modifiedOn: String
+
+  """Online Status"""
+  onlineStatus: String
+
+  """Product Families"""
+  productFamilies: [String]
+
+  """Product Releases"""
+  productReleases: [String]
+
+  """Title"""
+  title: String
+
+  """Version"""
+  version: String
+}
+
+type IshRecommendResult {
+  """ishRecommend results"""
+  results: [Search]
+
+  """ishRecommend source topic"""
+  sourceTopic: Search
+}
+
+"""Represents a reference topic."""
+type IshReferenceTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshReferenceTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a reference topic body."""
+type IshReferenceTopicBody {
+  """Returns the anonymous topic body sections."""
+  anonymousSections: [IshTopicSection]
+
+  """Return Examples"""
+  examples: [IshTopicSection]
+
+  """Return syntax or signature contents"""
+  refSyn: [IshTopicSection]
+
+  """Returns the topic body sections."""
+  sections(
+    """the section name filter (optional)"""
+    sectionNameFilter: String
+  ): [IshTopicSection]
+
+  """Topic XHTML"""
+  xhtml: String
+}
+
+"""Represents a task topic."""
+type IshTaskTopic implements IshTopic & Item {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic body"""
+  body: IshTaskTopicBody
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""Represents a task topic body."""
+type IshTaskTopicBody {
+  """Returns the anonymous topic body sections."""
+  anonymousSections: [IshTopicSection]
+
+  """Return Context"""
+  context: IshTopicSection
+
+  """Return Examples"""
+  examples: [IshTopicSection]
+
+  """Return Postreq"""
+  postreq: IshTopicSection
+
+  """Return Prereq"""
+  prereq: IshTopicSection
+
+  """Return Result"""
+  result: IshTopicSection
+
+  """Returns the topic body sections."""
+  sections(
+    """the section name filter (optional)"""
+    sectionNameFilter: String
+  ): [IshTopicSection]
+
+  """Return Steps"""
+  steps: IshTopicSection
+
+  """Topic XHTML"""
+  xhtml: String
+}
+
+"""Table of Contents"""
+type IshToc {
+  """Returns the child entries in the TOC."""
+  entries(
+    """the parent TOC ID"""
+    tocId: String
+  ): [IshTocItem]
+
+  """Identifies the unique ID of the TOC."""
+  id: ID
+
+  """Returns the title of the TOC."""
+  title: String
+
+  """Returns true if TOC has entries below it."""
+  hasChildren: Boolean
+}
+
+"""Table of Contents"""
+type IshTocItem {
+  """Returns custom meta for this TOC entry."""
+  customMeta: Map
+
+  """Returns TOC entries."""
+  entries: [IshTocItem]
+
+  """Identifies the unique ID of the TOC item."""
+  id: ID
+
+  """Returns the title of the table of contents."""
+  title: String
+
+  """Returns the id of the table of contents entry."""
+  tocId: String
+
+  """Returns the url for the entry in the TOC."""
+  url: String
+
+  """Returns true if this TOC item has entries below it."""
+  hasChildren: Boolean
+}
+
+"""Represents an ish Topic."""
+interface IshTopic {
+  """Topic abstract"""
+  abstract: IshTopicSection
+
+  """Topic Body XHTML"""
+  bodyXhtml: String
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Metadata"""
+  metadata: IshTopicMetadata
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Nested topics"""
+  nestedTopics: [IshTopic]
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Related links"""
+  relatedLinks: IshTopicRelatedLinks
+
+  """Topic short description"""
+  shortDescription: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Retrieve all topics that share the same topic ref"""
+  topicsWithSameLogicalRef: [IshTopicsByLogicalRef]
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Topic Url"""
+  url: String
+
+  """Used conditions within topic."""
+  usedConditions: Map
+
+  """Topic XHTML"""
+  xhtml: String
+
+  """Get publication of this topic."""
+  publication: IshPublication
+
+  """Get all publication this topic appears within."""
+  publications: [IshPublication]
+}
+
+"""A connection to a list of items."""
+type IshTopicConnection {
+  """a list of edges"""
+  edges: [IshTopicEdge]
+}
+
+"""An edge in a connection"""
+type IshTopicEdge {
+  """The item at the end of the edge"""
+  node: IshTopic
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+type IshTopicLink {
+  """CM Uri"""
+  cmUri: String
+
+  """Linked item"""
+  item: Item
+
+  """Title"""
+  title: String
+
+  """Type"""
+  type: String
+
+  """Uri"""
+  uri: String
+}
+
+enum IshTopicLinkRenderOptions {
+  """ABSOLUTE"""
+  ABSOLUTE
+
+  """RELATIVE"""
+  RELATIVE
+}
+
+type IshTopicMetadata {
+  """Created On"""
+  createdOn: String
+
+  """Locale"""
+  locale: String
+
+  """Locales"""
+  locales: [String]
+
+  """Logical Ref"""
+  logicalRef: String
+
+  """Modified On"""
+  modifiedOn: String
+
+  """Online Status"""
+  onlineStatus: String
+
+  """Product Families"""
+  productFamilies: [String]
+
+  """Product Family"""
+  productFamily: String
+
+  """Product Release"""
+  productRelease: String
+
+  """Product Releases"""
+  productReleases: [String]
+
+  """Publication Title"""
+  publicationTitle: String
+
+  """Publication Titles"""
+  publicationTitles: [String]
+
+  """Title"""
+  title: String
+
+  """Version"""
+  version: String
+}
+
+type IshTopicRelatedLinks {
+  """Links."""
+  links: [IshTopicLink]
+
+  """Xhtml."""
+  xhtml: String
+}
+
+enum IshTopicRenderOptions {
+  """RENDER_IMAGES"""
+  RENDER_IMAGES
+
+  """FAST_RENDER_IMAGES"""
+  FAST_RENDER_IMAGES
+
+  """NONE"""
+  NONE
+}
+
+type IshTopicsByLogicalRef {
+  """Identifies the topic ID."""
+  itemId: Int!
+
+  """Identifies the publication ID of the topic."""
+  publicationId: Int!
+
+  """Returns the full topic."""
+  topic(
+    """rendering mode for topic"""
+    topicRenderingOptions: IshTopicRenderOptions
+
+    """rendering mode for topic links"""
+    topicLinkRenderOptions: IshTopicLinkRenderOptions
+
+    """link url prefix"""
+    topicLinkUrlPrefix: String
+
+    """binary link url prefix"""
+    topicBinaryLinkUrlPrefix: String
+
+    """the conditions"""
+    conditions: [InputIshCondition]
+
+    """the conditions to exclude"""
+    excludeConditions: [InputIshCondition]
+
+    """skip all topic processing"""
+    skipTopicProcessing: Boolean
+  ): IshTopic
+
+  """Returns the title of the topic."""
+  topicTitle: String
+
+  """Returns the url of the topic."""
+  url: String
+}
+
+"""Represents a topic section."""
+type IshTopicSection {
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Links"""
+  links: [IshTopicLink]
+
+  """Name"""
+  title: String
+
+  """Type"""
+  type: String
+
+  """XHTML"""
+  xhtml: String
+}
+
+"""Represents an item. The root of all content models."""
+interface Item {
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+}
+
+"""A connection to a list of items."""
+type ItemConnection {
+  """a list of edges"""
+  edges: [ItemEdge]
+}
+
+"""An edge in a connection"""
+type ItemEdge {
+  """The item at the end of the edge"""
+  node: Item
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+type ItemReference {
+  """Item reference id."""
+  itemId: String
+
+  """Reference item title."""
+  itemTitle: String
+
+  """Reference item type."""
+  itemType: String
+
+  """Reference locale."""
+  locale: String
+
+  """Reference publication title."""
+  publicationTitle: String
+
+  """Reference number."""
+  referenceNo: Int
+
+  """Reference item url."""
+  url: String
+}
+
+"""Represents a keyword taxonomy item."""
+type Keyword implements TaxonomyItem & Item {
+  """Returns the child taxonomies for the taxonomy."""
+  children(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+  ): TaxonomyItemConnection
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Returns the depth (level) of the taxonomy."""
+  depth: Int
+
+  """Returns the description of the keyword."""
+  description: String
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the key of the taxonomy."""
+  key: String
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Returns the name of the keyword."""
+  name: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Returns the parent taxonomy of the taxonomy."""
+  parent: TaxonomyItem
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Identifies the ID of the taxonomy."""
+  taxonomyId: Int!
+
+  """Identifies the type of the taxonomy."""
+  taxonomyType: TaxonomyType!
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns total number of related items."""
+  totalRelatedItems: Int
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Returns true if the taxonomy has child taxonomies."""
+  hasChildren: Boolean
+
+  """Returns true if the taxonomy is abstract."""
+  abstract: Boolean
+
+  """Returns true if the taxonomy is navigable."""
+  navigable: Boolean
+
+  """Returns true if the keyword is used for identification."""
+  usedForIdentification: Boolean
+}
+
+"""A connection to a list of items."""
+type KeywordConnection {
+  """a list of edges"""
+  edges: [KeywordEdge]
+}
+
+"""An edge in a connection"""
+type KeywordEdge {
+  """The item at the end of the edge"""
+  node: Keyword
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+"""Represents a Link."""
+type Link {
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Link type."""
+  type: LinkType
+
+  """Link url."""
+  url: String
+
+  """Returns the typed page for the link url."""
+  page: PageItem
+}
+
+"""Represents the type of link."""
+enum LinkType {
+  """A page link."""
+  PAGE
+
+  """A component link."""
+  COMPONENT
+
+  """A binary link."""
+  BINARY
+
+  """A dynamic component link."""
+  DYNAMIC_COMPONENT
+}
+
+type LLMMetrics {
+  """LLM input token count."""
+  inputTokenCount: Int
+
+  """LLM output token count."""
+  outputTokenCount: Int
+}
+
+type LLMResponse {
+  """LLM answer."""
+  answer: String
+
+  """LLM metrics."""
+  llmMetrics: LLMMetrics
+
+  """LLM stop reason."""
+  stopReason: String
+
+  """LLM stop sequence."""
+  stopSequence: String
+}
+
+"""Long type"""
+scalar Long
+
+"""Coercing Map"""
+scalar Map
+
+"""Represents the type of mapping strategy used."""
+enum MappingStrategyType {
+  """Resolve based on using cd_dynamic configuration static mappings."""
+  STATIC
+
+  """
+  Resolve based on storage values of specific publication properties in Publication table.
+  """
+  STORAGE
+
+  """
+  Dynamically matches publication properties against values in Publication DB table.
+  """
+  DYNAMIC_STORAGE
+
+  """
+  Resolve by attempting to use page metadata against and finding a matched publication by relative path.
+  """
+  METADATA
+}
+
+"""To define the metadata field type"""
+enum MetadataFieldType {
+  """ANY"""
+  ANY
+
+  """DATE"""
+  DATE
+
+  """DOUBLE"""
+  DOUBLE
+
+  """LONG"""
+  LONG
+
+  """TEXT"""
+  TEXT
+}
+
+enum MetadataType {
+  """STRING"""
+  STRING
+
+  """DATE"""
+  DATE
+
+  """FLOAT"""
+  FLOAT
+}
+
+"""Represents a page."""
+type Page implements PageItem & Container & Taggable & Item & PageRegion {
+  """Returns the list of components in region."""
+  components(
+    """return all child region components (optional)"""
+    returnChildRegionComponents: Boolean
+  ): [ContentComponent]
+
+  """Returns the items in this container."""
+  containerItems(
+    """the container types to include in the result set (optional)"""
+    types: [ContainerType]
+  ): [Item]
+
+  """Returns the content in the page."""
+  content(
+    """whether to render dynamic content tags"""
+    renderContent: Boolean
+  ): Content
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Returns the file name path to the page."""
+  fileName: String
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Returns the name of the region."""
+  name: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Returns the template for the page."""
+  pageTemplate: Template
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the raw content in the page."""
+  rawContent(
+    """whether to render dynamic content tags"""
+    renderContent: Boolean
+  ): RawContent
+
+  """Returns the regions for the page."""
+  regions(
+    """the page region filter (optional)"""
+    filter: String
+  ): [PageRegion]
+
+  """Returns the list of taxonomies for the item."""
+  taxonomies(
+    """the list of taxonomy types to include in the result set"""
+    types: [TaxonomyType]
+  ): [TaxonomyItem]
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Identifies the URL of the page."""
+  url: String!
+}
+
+"""A connection to a list of items."""
+type PageConnection {
+  """a list of edges"""
+  edges: [PageEdge]
+}
+
+"""An edge in a connection"""
+type PageEdge {
+  """The item at the end of the edge"""
+  node: Page
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+"""Represents a page item. The root of all page models."""
+interface PageItem {
+  """Returns the list of components in region."""
+  components(
+    """return all child region components (optional)"""
+    returnChildRegionComponents: Boolean
+  ): [ContentComponent]
+
+  """Returns the items in this container."""
+  containerItems(
+    """the container types to include in the result set (optional)"""
+    types: [ContainerType]
+  ): [Item]
+
+  """Returns the content in the page."""
+  content(
+    """whether to render dynamic content tags"""
+    renderContent: Boolean
+  ): Content
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Returns the file name path to the page."""
+  fileName: String
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Returns the name of the region."""
+  name: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Returns the template for the page."""
+  pageTemplate: Template
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the raw content in the page."""
+  rawContent(
+    """whether to render dynamic content tags"""
+    renderContent: Boolean
+  ): RawContent
+
+  """Returns the regions for the page."""
+  regions(
+    """the page region filter (optional)"""
+    filter: String
+  ): [PageRegion]
+
+  """Returns the list of taxonomies for the item."""
+  taxonomies(
+    """the list of taxonomy types to include in the result set"""
+    types: [TaxonomyType]
+  ): [TaxonomyItem]
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Identifies the URL of the page."""
+  url: String!
+}
+
+"""Represents a page region."""
+interface PageRegion {
+  """Returns the list of components in region."""
+  components(
+    """return all child region components (optional)"""
+    returnChildRegionComponents: Boolean
+  ): [ContentComponent]
+
+  """Returns the name of the region."""
+  name: String
+
+  """Returns the regions for the page."""
+  regions(
+    """the page region filter (optional)"""
+    filter: String
+  ): [PageRegion]
+}
+
+type PageSitemapItem implements SitemapItem {
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Original title"""
+  originalTitle: String
+
+  """The most recent date this item was published."""
+  publishedDate: String
+
+  """Title"""
+  title: String
+
+  """Type"""
+  type: String
+
+  """URL"""
+  url: String
+
+  """Visible"""
+  visible: Boolean
+}
+
+"""Represents a publication."""
+type Publication implements Item {
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Returns the multimedia path for the publication."""
+  multimediaPath: String
+
+  """Returns the multimedia URL for the publication."""
+  multimediaUrl: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the publication key."""
+  publicationKey: String
+
+  """Returns the publication path."""
+  publicationPath: String
+
+  """Returns the publication URL."""
+  publicationUrl: String
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+}
+
+"""A connection to a list of items."""
+type PublicationConnection {
+  """a list of edges"""
+  edges: [PublicationEdge]
+}
+
+"""An edge in a connection"""
+type PublicationEdge {
+  """The item at the end of the edge"""
+  node: Publication
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+"""Represents a publication mapping."""
+type PublicationMapping {
+  """Returns the domain."""
+  domain: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Returns the path."""
+  path: String
+
+  """Returns the scan depth."""
+  pathScanDepth: Int
+
+  """Returns the port."""
+  port: String
+
+  """Returns the protocol."""
+  protocol: String
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+}
+
+"""A connection to a list of items."""
+type PublicationMappingConnection {
+  """a list of edges"""
+  edges: [PublicationMappingEdge]
+}
+
+"""An edge in a connection"""
+type PublicationMappingEdge {
+  """The item at the end of the edge"""
+  node: PublicationMapping
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+"""Represents an item with content."""
+type RawContent {
+  """Returns the character set encoding of the string content."""
+  charSet: String
+
+  """Returns the string content."""
+  content: String
+
+  """Return content data"""
+  data: Map
+
+  """Identifies the unique ID of the node."""
+  id: ID
+}
+
+enum RecommendationMode {
+  """semantic"""
+  semantic
+
+  """smart"""
+  smart
+}
+
+"""Represents Rich Text"""
+type Rtf {
+  """Returns the content fragments."""
+  fragments: [RtfFragment]
+
+  """Returns the html content."""
+  html: String
+}
+
+type RtfComponentLinkFragment implements RtfFragment {
+  """Linked Component"""
+  component: ContentComponent
+
+  """Html Fragment"""
+  html: String
+}
+
+interface RtfFragment {
+  """Html Fragment"""
+  html: String
+}
+
+type RtfHtmlFragment implements RtfFragment {
+  """Html Fragment"""
+  html: String
+}
+
+type Search {
+  """The author of the search result."""
+  author: String
+
+  """The author of the binary file."""
+  binaryAuthor: String
+
+  """The binary content length of the search result."""
+  binaryContentLength: Long
+
+  """The binary content type of the search result."""
+  binaryContentType: String
+
+  """The creation date of the binary file."""
+  binaryCreatedDate: String
+
+  """The binary file name of the search result."""
+  binaryFileName: String
+
+  """The language of the search result. (binary file)"""
+  binaryLanguage: String
+
+  """The title of binary file."""
+  binaryTitle: String
+
+  """Concept schemes attached to a search result."""
+  conceptSchemes: [ConceptScheme]
+
+  """The creation date of the search result."""
+  createdDate: String
+
+  """A map of fields defined on the search result."""
+  fields: Map
+
+  """A map of highlighted search results."""
+  highlighted: Map
+
+  """The search result identifier."""
+  id: String
+
+  """The item type of the search result."""
+  itemType: String
+
+  """The locale of the search result."""
+  locale: String
+
+  """The location of the search result."""
+  location: String
+
+  """The content of the search result (indexed by locale)."""
+  mainContentField: String
+
+  """The major version of the search result."""
+  majorVersion: String
+
+  """The minor version of the search result."""
+  minorVersion: String
+
+  """The updated date of the search result."""
+  modifiedDate: String
+
+  """The namespace of the search result."""
+  namespace: String
+
+  """The publication ID of the search result."""
+  publicationId: Int
+
+  """The publication title of the search result."""
+  publicationTitle: String
+
+  """The raw content of the search result."""
+  rawContent: String
+
+  """The title of the search result (indexed by locale)."""
+  rawLanguageTitle: String
+
+  """The schema id of the search result."""
+  schemaId: String
+
+  """Matching score of the result."""
+  score: Float
+
+  """The title of the search result containing no tags (indexed by locale)."""
+  title: String
+
+  """The url of the search result."""
+  url: String
+}
+
+"""
+This is the search result response that contains results from search and broker database.
+"""
+type SearchResults {
+  """This is the results from broker database."""
+  broker: [Item]
+
+  """This is the results from query service."""
+  search: Search
+}
+
+"""A connection to a list of items."""
+type SearchResultsConnection {
+  """The total number of the hits"""
+  hits: Int
+
+  """a list of edges"""
+  edges: [SearchResultsEdge]
+
+  """details about this specific page"""
+  pageInfo: PageInfo!
+}
+
+"""An edge in a connection"""
+type SearchResultsEdge {
+  """The item at the end of the edge"""
+  node: SearchResults
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+"""Sitemap Item"""
+interface SitemapItem {
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Original title"""
+  originalTitle: String
+
+  """The most recent date this item was published."""
+  publishedDate: String
+
+  """Title"""
+  title: String
+
+  """Type"""
+  type: String
+
+  """URL"""
+  url: String
+
+  """Visible"""
+  visible: Boolean
+}
+
+"""These are the fields that allow sorting"""
+enum SortFieldType {
+  """CREATION_DATE"""
+  CREATION_DATE
+
+  """INITIAL_PUBLISH_DATE"""
+  INITIAL_PUBLISH_DATE
+
+  """ITEM_ID"""
+  ITEM_ID
+
+  """ITEM_TYPE"""
+  ITEM_TYPE
+
+  """LAST_PUBLISH_DATE"""
+  LAST_PUBLISH_DATE
+
+  """NAMESPACE_ID"""
+  NAMESPACE_ID
+
+  """OWNING_PUBLICATION_ID"""
+  OWNING_PUBLICATION_ID
+
+  """PUBLICATION_ID"""
+  PUBLICATION_ID
+
+  """TITLE"""
+  TITLE
+
+  """UPDATED_DATE"""
+  UPDATED_DATE
+
+  """CUSTOM_META"""
+  CUSTOM_META
+}
+
+"""Sorting direction of results"""
+enum SortingDirectionType {
+  """ASCENDING"""
+  ASCENDING
+
+  """DESCENDING"""
+  DESCENDING
+}
+
+"""Represents a type of natural sort: descending or ascending"""
+enum SortOrderType {
+  """A string value"""
+  Ascending
+
+  """A string value"""
+  Descending
+}
+
+"""Represents a structure group."""
+type StructureGroup implements TaxonomyItem & Item {
+  """Returns the child taxonomies for the taxonomy."""
+  children(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+  ): TaxonomyItemConnection
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Returns the depth (level) of the taxonomy."""
+  depth: Int
+
+  """Returns the directory of the structure group."""
+  directory: String
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the key of the taxonomy."""
+  key: String
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Returns the parent taxonomy of the taxonomy."""
+  parent: TaxonomyItem
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Identifies the ID of the taxonomy."""
+  taxonomyId: Int!
+
+  """Identifies the type of the taxonomy."""
+  taxonomyType: TaxonomyType!
+
+  """Returns the title of the structure group."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Returns true if the taxonomy has child taxonomies."""
+  hasChildren: Boolean
+
+  """Returns true if the taxonomy is abstract."""
+  abstract: Boolean
+
+  """Returns true if the taxonomy is navigable."""
+  navigable: Boolean
+}
+
+"""A connection to a list of items."""
+type StructureGroupConnection {
+  """a list of edges"""
+  edges: [StructureGroupEdge]
+}
+
+"""An edge in a connection"""
+type StructureGroupEdge {
+  """The item at the end of the edge"""
+  node: StructureGroup
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+"""Represents a related set of entities."""
+interface Taggable {
+  """Returns the list of taxonomies for the item."""
+  taxonomies(
+    """the list of taxonomy types to include in the result set"""
+    types: [TaxonomyType]
+  ): [TaxonomyItem]
+}
+
+"""Represents a taxonomy item."""
+interface TaxonomyItem {
+  """Returns the child taxonomies for the taxonomy."""
+  children(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+  ): TaxonomyItemConnection
+
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Returns the depth (level) of the taxonomy."""
+  depth: Int
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the key of the taxonomy."""
+  key: String
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Returns the parent taxonomy of the taxonomy."""
+  parent: TaxonomyItem
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Identifies the ID of the taxonomy."""
+  taxonomyId: Int!
+
+  """Identifies the type of the taxonomy."""
+  taxonomyType: TaxonomyType!
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+
+  """Returns true if the taxonomy has child taxonomies."""
+  hasChildren: Boolean
+
+  """Returns true if the taxonomy is abstract."""
+  abstract: Boolean
+
+  """Returns true if the taxonomy is navigable."""
+  navigable: Boolean
+}
+
+"""A connection to a list of items."""
+type TaxonomyItemConnection {
+  """a list of edges"""
+  edges: [TaxonomyItemEdge]
+}
+
+"""An edge in a connection"""
+type TaxonomyItemEdge {
+  """The item at the end of the edge"""
+  node: TaxonomyItem
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+"""A connection to a list of items."""
+type TaxonomyNarrowerConceptsConnection {
+  """a list of edges"""
+  edges: [TaxonomyNarrowerConceptsEdge]
+}
+
+"""An edge in a connection"""
+type TaxonomyNarrowerConceptsEdge {
+  """The item at the end of the edge"""
+  node: Concept
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+"""A connection to a list of items."""
+type TaxonomyRelatedConceptsConnection {
+  """a list of edges"""
+  edges: [TaxonomyRelatedConceptsEdge]
+}
+
+"""An edge in a connection"""
+type TaxonomyRelatedConceptsEdge {
+  """The item at the end of the edge"""
+  node: Concept
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+type TaxonomySitemapItem implements SitemapItem {
+  """Classified Items Count"""
+  classifiedItemsCount: Int
+
+  """Description"""
+  description: String
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Items"""
+  items: [SitemapItem]
+
+  """Key"""
+  key: String
+
+  """Original title"""
+  originalTitle: String
+
+  """The most recent date this item was published."""
+  publishedDate: String
+
+  """Title"""
+  title: String
+
+  """Type"""
+  type: String
+
+  """Url"""
+  url: String
+
+  """Is Abstract"""
+  abstract: Boolean
+
+  """Has Child Nodes"""
+  hasChildNodes: Boolean
+
+  """Visible"""
+  visible: Boolean
+}
+
+"""A connection to a list of items."""
+type TaxonomyTopConceptsSearchResultsConnection {
+  """a list of edges"""
+  edges: [TaxonomyTopConceptsSearchResultsEdge]
+}
+
+"""An edge in a connection"""
+type TaxonomyTopConceptsSearchResultsEdge {
+  """The item at the end of the edge"""
+  node: Concept
+
+  """cursor marks a unique position or index into the connection"""
+  cursor: String!
+}
+
+enum TaxonomyType {
+  """KEYWORD"""
+  KEYWORD
+
+  """CATEGORY"""
+  CATEGORY
+
+  """STRUCTUREGROUP"""
+  STRUCTUREGROUP
+}
+
+"""Represents a template."""
+type Template implements Item {
+  """Returns the date the item was created."""
+  creationDate: String
+
+  """Returns the custom meta data for the item."""
+  customMetas(
+    """
+    Fetches nodes after this item exclusively. Use with the first parameter.
+    """
+    after: String
+
+    """
+    The number of nodes to return with each page of results. Defaults to 20. Pass -1 to retrieve all nodes.
+    """
+    first: Int
+
+    """the custom meta filter (optional)"""
+    filter: String
+  ): CustomMetaConnection
+
+  """
+  Returns the custom meta data structure for the item. Can be used to group related fields together.
+  """
+  customMetasStructure(
+    """the custom meta filter (optional)"""
+    filter: String
+  ): UntypedContent
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Returns the date the item was initially published."""
+  initialPublishDate: String
+
+  """Identifies the item ID."""
+  itemId: Int!
+
+  """Returns the item type of the item."""
+  itemType: Int
+
+  """Returns the date the item was most recently published."""
+  lastPublishDate: String
+
+  """Identifies the namespace ID of the item."""
+  namespaceId: Int!
+
+  """Returns the output format of the template."""
+  outputFormat: String
+
+  """
+  Returns the publication ID of the publication to which this item belongs.
+  """
+  owningPublicationId: Int
+
+  """Returns the priority of the template."""
+  priority: Int
+
+  """Identifies the publication ID of the item."""
+  publicationId: Int!
+
+  """Returns the title of the item."""
+  title: String
+
+  """Returns the date the item was updated."""
+  updatedDate: String
+}
+
+type TrustableChatLLMResponse {
+  """LLM answer."""
+  answer: String
+
+  """LLM metrics."""
+  llmMetrics: LLMMetrics
+
+  """References to items used as a context in LLM prompt."""
+  references: [ItemReference]
+
+  """Similar related questions."""
+  relatedQuestions: [String]
+
+  """LLM stop reason."""
+  stopReason: String
+
+  """LLM stop sequence."""
+  stopSequence: String
+
+  """Memory id."""
+  memoryId: String
+}
+
+"""Untyped content where all data is available in a Map structure."""
+type UntypedContent implements Content {
+  """Return content data"""
+  data: Map
+
+  """Identifies the unique ID of the node."""
+  id: ID
+
+  """Identifies the type of the content."""
+  type: String
+}
+
+"""Untyped page region."""
+type UntypedPageRegion implements PageRegion {
+  """Returns the list of components in region."""
+  components(
+    """return all child region components (optional)"""
+    returnChildRegionComponents: Boolean
+  ): [ContentComponent]
+
+  """Returns the name of the region."""
+  name: String
+
+  """Returns the regions for the page."""
+  regions(
+    """the page region filter (optional)"""
+    filter: String
+  ): [PageRegion]
+}
