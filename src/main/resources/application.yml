@@ -28,13 +28,13 @@ content:
   client-id: dxd-client
   url: ${DXD_CONTENT_URL:http://localhost:8081/cd/api}
 
-debug: true
+debug: false
 
 logging:
   level:
     root: INFO
-    com.sdl.delivery.content.example.mcp.server: DEBUG
-    org.springframework.ai: DEBUG
+    com.sdl.delivery.content.example.mcp.server: INFO
+    org.springframework.ai: INFO
     org.springframework.security.oauth2.client: ERROR
     org.springframework.security.oauth2: ERROR
     org.springframework.security.web: INFO
