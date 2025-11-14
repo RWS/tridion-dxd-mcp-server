@@ -23,7 +23,7 @@
 
         <mcp-annotations.version>0.1.0</mcp-annotations.version>
         <netty.version>4.1.119.Final</netty.version>
-        <spring.version>6.2.7</spring.version>
+        <spring.version>6.2.8</spring.version>
         <spring-ai.version>1.0.0</spring-ai.version>
         <spring-boot.version>3.5.0</spring-boot.version>
         <spring-graphql.version>1.4.0</spring-graphql.version>
